@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Juan Carlos González</title>
+<meta name="description" content="Portfolio of Juan Carlos González, Applied AI Lead and ML Engineer. Pick a style.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800&family=Space+Grotesk:wght@400;700&family=IBM+Plex+Mono&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f4f1;--ink:#14161b;--soft:#646a75;--line:rgba(20,22,27,.1)}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1114;--ink:#eceef1;--soft:#9aa1ad;--line:rgba(255,255,255,.1)}}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:'Space Grotesk',system-ui,sans-serif;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;padding:clamp(20px,5vw,56px)}
+header{max-width:1100px;width:100%;margin:0 auto 32px}
+.k{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--soft)}
+h1{font-size:clamp(34px,6vw,64px);letter-spacing:-.03em;line-height:1;margin:10px 0 12px}
+p.s{color:var(--soft);font-size:clamp(16px,2vw,19px);max-width:560px;line-height:1.5}
+.g{max-width:1100px;width:100%;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:20px;flex:1}
+a.c{position:relative;display:flex;flex-direction:column;justify-content:flex-end;min-height:min(62vh,560px);border-radius:22px;overflow:hidden;text-decoration:none;padding:26px;transition:transform .25s}
+a.c:hover{transform:translateY(-4px)}
+a.c:focus-visible{outline:3px solid #ff6b1a;outline-offset:3px}
+.neon{background:#03070a;color:#e6fff4;font-family:'Share Tech Mono',monospace}
+.neon::before{content:"";position:absolute;inset:0;background:
+  linear-gradient(transparent 55%,rgba(3,7,10,.9)),
+  repeating-linear-gradient(90deg,rgba(25,255,156,.18) 0 1px,transparent 1px 40px),
+  repeating-linear-gradient(0deg,rgba(25,255,156,.18) 0 1px,transparent 1px 40px),
+  radial-gradient(circle at 50% 35%,rgba(0,208,255,.35),transparent 55%)}
+.neon .road{position:absolute;left:50%;bottom:0;width:60%;height:70%;transform:translateX(-50%);background:linear-gradient(90deg,transparent 0 calc(50% - 46%),#19ff9c calc(50% - 46%) calc(50% - 45%),transparent 0 calc(50% + 45%),#00d0ff calc(50% + 45%) calc(50% + 46%),transparent 0);clip-path:polygon(46% 0,54% 0,100% 100%,0 100%);opacity:.9;filter:drop-shadow(0 0 8px #19ff9c)}
+.neon h2{font-family:Orbitron,sans-serif;color:#19ff9c;text-shadow:0 0 18px rgba(25,255,156,.6)}
+.lab{background:#eef1f5;color:#11151c}
+.lab::before{content:"";position:absolute;inset:0;background:
+  radial-gradient(circle at 30% 30%,#ffd2b8 0 7px,transparent 8px),radial-gradient(circle at 42% 22%,#c9d0da 0 7px,transparent 8px),
+  radial-gradient(circle at 54% 34%,#ffd2b8 0 7px,transparent 8px),radial-gradient(circle at 66% 24%,#c9d0da 0 7px,transparent 8px),
+  radial-gradient(circle at 48% 46%,#2f6bff 0 4px,transparent 5px),
+  linear-gradient(transparent 55%,rgba(238,241,245,.95))}
+.lab h2{color:#ff6b1a}
+a.c h2{position:relative;font-size:clamp(26px,3.4vw,38px);letter-spacing:-.02em;margin-bottom:8px}
+a.c p{position:relative;line-height:1.5;opacity:.85;max-width:420px}
+a.c .go{position:relative;margin-top:16px;font-family:'IBM Plex Mono',monospace;font-size:13px;display:inline-flex;gap:8px;align-items:center}
+footer{max-width:1100px;width:100%;margin:28px auto 0;display:flex;flex-wrap:wrap;gap:8px 20px;font-family:'IBM Plex Mono',monospace;font-size:13px}
+footer a{color:var(--soft)}footer a:hover{color:var(--ink)}
+@media (max-width:760px){.g{grid-template-columns:1fr}a.c{min-height:42vh;min-height:42svh;padding:20px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="k">portfolio · draft</div>
+  <h1>Juan Carlos González</h1>
+  <p class="s">Applied AI Lead and ML Engineer, from Mexico City to Malmö. Two styles of the same story — pick one, you can switch at any time.</p>
+</header>
+<main class="g">
+  <a class="c neon" href="concepts/1-cyberpunk.html">
+    <div class="road"></div>
+    <h2>Neon Run</h2>
+    <p>A cyberpunk night run through Mexico, Istanbul, Brazil and Sweden, with flights over a glowing globe.</p>
+    <span class="go">enter →</span>
+  </a>
+  <a class="c lab" href="concepts/5-ai-robotics.html">
+    <h2>Neural Lab</h2>
+    <p>A friendly robot walks from Chichén Itzá to Malmö, flying between countries and training a neural network along the way.</p>
+    <span class="go">enter →</span>
+  </a>
+</main>
+<footer>
+  <a href="concepts/index.html">all five early concepts</a>
+  <a href="https://www.github.com/perrosdatos">github</a>
+  <a href="https://www.linkedin.com/in/juancarlosgonzalezaguilar/">linkedin</a>
+</footer>
+</body>
+</html>

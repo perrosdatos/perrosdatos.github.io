@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neural Lab — Juan Carlos González</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1f5;--ink:#11151c;--soft:#5d6675;--acc:#ff6b1a;--blue:#2f6bff;--card:rgba(255,255,255,.82);--bd:rgba(17,21,28,.08)}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Space Grotesk',system-ui,sans-serif;overflow-x:hidden}
+#c{position:fixed;inset:0;width:100%;height:100%;z-index:0}
+nav{position:fixed;top:0;left:0;right:0;z-index:3;display:flex;justify-content:space-between;align-items:center;padding:18px 28px;font-family:'IBM Plex Mono';font-size:13px}
+nav .logo{font-weight:500}nav .logo i{color:var(--acc);font-style:normal}
+nav a{color:var(--ink);text-decoration:none;margin-left:22px;opacity:.7}nav a:hover{opacity:1;color:var(--acc)}
+main{position:relative;z-index:1;pointer-events:none}
+main a,main .card,main .run{pointer-events:auto}
+section{min-height:100vh;padding:14vh 6vw}
+.hero{display:flex;flex-direction:column;justify-content:center}
+.status{font-family:'IBM Plex Mono';font-size:13px;display:inline-flex;align-items:center;gap:8px;background:var(--card);padding:6px 12px;border-radius:999px;border:1px solid var(--bd);width:max-content;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.status::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:#20c060;box-shadow:0 0 0 4px rgba(32,192,96,.2);animation:p 1.6s infinite}@keyframes p{50%{box-shadow:0 0 0 8px rgba(32,192,96,0)}}
+h1{font-size:clamp(44px,7.5vw,110px);line-height:.95;letter-spacing:-.04em;margin:22px 0;font-weight:700;max-width:900px}
+h1 span{color:var(--acc)}
+.lead{font-size:20px;color:var(--soft);max-width:520px;line-height:1.5}
+h2{font-size:clamp(30px,4vw,52px);letter-spacing:-.03em;margin-bottom:10px}
+.kicker{font-family:'IBM Plex Mono';font-size:13px;color:var(--acc);margin-bottom:12px}
+.journey .step{min-height:75vh;display:flex;align-items:center}
+.card{background:var(--card);backdrop-filter:blur(12px);border:1px solid var(--bd);border-radius:18px;padding:22px 24px;max-width:400px;box-shadow:0 10px 40px rgba(17,21,28,.06)}
+.card .l{font-family:'IBM Plex Mono';font-size:12px;color:var(--soft);display:flex;justify-content:space-between;margin-bottom:10px}
+.card .l b{color:var(--acc);font-weight:500}
+.card h3{font-size:22px;letter-spacing:-.02em;margin-bottom:6px}
+.card p{color:var(--soft);line-height:1.5}
+.modelcard{max-width:760px;background:var(--card);backdrop-filter:blur(12px);border:1px solid var(--bd);border-radius:18px;overflow:hidden;margin-top:28px}
+.modelcard div{display:grid;grid-template-columns:200px 1fr;border-top:1px solid var(--bd);padding:14px 22px;gap:16px}
+.modelcard div:first-child{border-top:0}
+.modelcard dt{font-family:'IBM Plex Mono';font-size:13px;color:var(--soft)}
+.modelcard dd{line-height:1.5}
+.modelcard dd span{display:inline-block;background:#fff;border:1px solid var(--bd);border-radius:6px;padding:3px 8px;margin:0 5px 6px 0;font-size:14px}
+.runs{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:28px;max-width:1100px}
+.run{background:var(--card);backdrop-filter:blur(12px);border:1px solid var(--bd);border-radius:16px;padding:18px;text-decoration:none;color:inherit;transition:.2s}
+.run:hover{transform:translateY(-4px);border-color:var(--acc)}
+.run .id{font-family:'IBM Plex Mono';font-size:12px;color:var(--soft);display:flex;justify-content:space-between}
+.run .id i{font-style:normal;color:#20c060}
+.run h3{margin:8px 0 4px;font-size:19px}
+.run p{color:var(--soft);font-size:15px;line-height:1.45}
+.run svg{width:100%;height:46px;margin-top:10px}
+.contact a{display:block;font-size:clamp(22px,3vw,36px);color:var(--ink);text-decoration:none;letter-spacing:-.02em;margin:10px 0}
+.contact a:hover{color:var(--acc)}
+.flt{height:190vh;position:relative}
+.bp{position:sticky;top:calc(100vh - 230px);top:calc(100svh - 230px);margin-left:auto;width:min(420px,100%);background:#fff;border-radius:16px;box-shadow:0 14px 40px rgba(17,21,28,.12);overflow:hidden;font-family:'IBM Plex Mono';pointer-events:auto}
+.bp-h{display:flex;justify-content:space-between;padding:10px 18px;background:var(--ink);color:#fff;font-size:12px}
+.bp-h span:last-child{color:var(--acc)}
+.bp-r{display:flex;align-items:center;padding:14px 18px 8px}
+.bp-r b{display:block;font-family:'Space Grotesk';font-size:34px;letter-spacing:-.02em}
+.bp-r small,.bp-f small{display:block;color:var(--soft);font-size:11px}
+.bp-r i{font-style:normal;color:var(--soft);font-size:12px}
+.bp-r .arr{flex:1;text-align:center;color:var(--acc);font-size:20px;border-bottom:2px dotted var(--bd);margin:0 14px 18px}
+.bp-f{display:flex;justify-content:space-between;gap:12px;padding:10px 18px 14px;border-top:2px dashed var(--bd);font-size:13px}
+.layer{position:fixed;right:24px;bottom:22px;z-index:3;font-family:'IBM Plex Mono';font-size:12px;background:var(--card);border:1px solid var(--bd);padding:8px 12px;border-radius:10px}
+@media (max-width:1000px){nav a{display:none}}
+@media (max-width:760px){section{padding:12vh 18px}.modelcard div{grid-template-columns:1fr;gap:4px}.lead{font-size:17px}
+  .journey .step{align-items:flex-start;padding-top:9vh}.card{max-width:100%;padding:16px 18px;background:rgba(255,255,255,.88)}.card h3{font-size:19px}
+  .layer{top:14px;bottom:auto;right:14px;font-size:10.5px;max-width:58vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .flt{height:170vh}.bp{margin:0 auto;top:calc(100svh - 290px)}.bp-r b{font-size:26px}}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<nav><div class="logo">jcg<i>.</i>lab</div><div><a href="#journey">journey</a><a href="#model">model card</a><a href="#runs">experiments</a><a href="#contact">contact</a></div></nav>
+<div class="layer" id="layer">Mexico City · start</div>
+<main>
+  <section class="hero">
+    <div class="status">online · ML Engineer @ Apple via AFRY · Malmö</div>
+    <h1>Juan Carlos González builds <span>models that ship.</span></h1>
+    <p class="lead">Applied AI Lead. LLM platforms, AI agents and reinforcement learning, from a robotics lab in Mexico City to production in Sweden.</p>
+  </section>
+
+  <section class="journey" id="journey">
+    <div class="kicker">// training history</div>
+    <h2 data-node>From Chichén Itzá to Malmö.</h2>
+    <div id="steps"></div>
+  </section>
+
+  <section id="model">
+    <div class="kicker">// model card</div>
+    <h2>Model: jcg-v9</h2>
+    <dl class="modelcard" id="mc"></dl>
+  </section>
+
+  <section id="runs">
+    <div class="kicker">// experiments</div>
+    <h2>Selected runs</h2>
+    <div class="runs" id="runList"></div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="kicker">// inference endpoint</div>
+    <h2 style="margin-bottom:24px">Send a request.</h2>
+    <a href="mailto:carlosgonzagular@gmail.com">carlosgonzagular@gmail.com ↗</a>
+    <a href="https://www.github.com/perrosdatos">github / perrosdatos ↗</a>
+    <a href="https://www.linkedin.com/in/juancarlosgonzalezaguilar/">linkedin ↗</a>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/SVGLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<script src="shared/world3d.js"></script>
+<script>
+const M=[
+ {y:'2011',p:'Istanbul',t:'RoboCup Istanbul',d:'First trip abroad with a robot. Also won the State Youth Award for technological innovation.'},
+ {y:'2012',p:'Mexico City',t:'UNAM',d:'BSc Applied Mathematics & Computing, graduated with honors. Programming contest wins.'},
+ {y:'2014',p:'Brazil',t:'Robotics champion',d:'1st place Mexican Robotics Tournament (IEEE), then the Latin American Robotics Competition in Brazil.'},
+ {y:'2016',p:'Mexico City',t:'MTEXPERTS',d:'First data science job. Queue prediction gave +10% service efficiency.'},
+ {y:'2017',p:'Mexico City',t:'BBVA',d:'Senior Data Scientist. Graph + NLP risk platform behind €350M in loans.'},
+ {y:'2022',p:'Jönköping',t:'SESOL',d:'Lead Data Scientist, team of 8+. AI agents saving €600K+ per year.'},
+ {y:'2024',p:'Jönköping',t:'MSc AI Engineering',d:'Jönköping University. Thesis on scaling multi-agent RL with a custom JAX wrapper. The forward pass happens here.'},
+ {y:'2025',p:'Malmö',t:'Apple (via AFRY)',d:'Machine Learning Engineer. Weights frozen under NDA.'}];
+
+// ---------- regions + route (each country is its own patch of the map) ----------
+const REG={MX:{x:0,name:'Mexico City'},IST:{x:1000,name:'Istanbul'},BRA:{x:-1000,name:'Brazil'},SWE:{x:2000,name:'Sweden'}};
+const LEGS=W3D.FLIGHTS,PZ=1.6;
+const ND=[{g:'MX',x:0},{f:0},{g:'IST',x:0,m:0},{f:1},{g:'MX',x:14,m:1},{f:2},{g:'BRA',x:0,m:2},{f:3},{g:'MX',x:30,m:3},{g:'MX',x:40,m:4},{f:4},{g:'SWE',x:0,m:5},{g:'SWE',x:13,m:6},{g:'SWE',x:26,m:7}];
+const nodes=ND.map(n=>n.f!=null?{type:'flight',leg:LEGS[n.f]}:{type:'ground',pos:new THREE.Vector3(REG[n.g].x+n.x,0,PZ)});
+const FLY_H=7,route=W3D.makeRoute(nodes,{walk:new THREE.Vector3(6,0,0),Dtot:110,H:FLY_H});
+
+// ---------- DOM ----------
+let si=0;
+steps.innerHTML=ND.slice(1).map((n,j)=>{
+  if(n.f!=null){const L=LEGS[n.f],a=W3D.CITIES[L.from],b=W3D.CITIES[L.to];
+    return`<div class="flt" data-node><div class="bp"><div class="bp-h"><span>Boarding pass</span><span>JCG ${L.y}</span></div>
+      <div class="bp-r"><div><small>from</small><b>${L.from}</b><i>${a[2].toLowerCase()}</i></div><div class="arr">✈</div><div style="text-align:right"><small>to</small><b>${L.to}</b><i>${b[2].toLowerCase()}</i></div></div>
+      <div class="bp-f"><span><small>passenger</small>J.C. González</span><span><small>purpose</small>${L.why}</span></div></div></div>`}
+  const m=M[n.m];si++;return`<div class="step" data-node data-i="${j+1}"><div class="card"><div class="l"><span>stage ${si} · ${m.p}</span><b>${m.y}</b></div><h3>${m.t}</h3><p>${m.d}</p></div></div>`}).join('');
+const nodeEls=[...document.querySelectorAll('[data-node]')];
+mc.innerHTML=[['Architecture','Applied mathematician (UNAM) + MSc AI Engineering, robotics pre-training'],['Training data','9+ years across banking, energy and big tech'],
+ ['Languages','<span>Python</span><span>SQL</span><span>Scala</span>'],['Frameworks','<span>JAX</span><span>PyTorch</span><span>TensorFlow</span><span>scikit-learn</span><span>Spark</span>'],
+ ['LLM stack','<span>RAG</span><span>LangGraph</span><span>LangChain</span><span>AI agents</span><span>MCP</span><span>fine-tuning</span>'],
+ ['MLOps','<span>AWS SageMaker</span><span>Databricks</span><span>Kubeflow</span><span>Docker</span><span>CI/CD</span><span>Airflow</span>'],
+ ['Also good at','Leading teams of 8+, product vision, mentoring at hackathons'],['Known limitations','Will talk about reinforcement learning at parties']]
+ .map(r=>`<div><dt>${r[0]}</dt><dd>${r[1]}</dd></div>`).join('');
+const P=[['lux-ai-s3-marl','Lux AI S3 · multi-agent RL','MAPPO, QMIX, MASAC with reward shaping and a JAX wrapper.'],
+ ['dfs-ocr','DFS OCR Reader','YOLOv5 + Tesseract + BERT over federal security archives.','https://github.com/perrosdatos/files_dfs_ocr_reader'],
+ ['tsp-ga','Genetic algorithm · TSP','Near-optimal tours at lower cost than branch-and-bound.'],
+ ['kw-music','Semantic music recommender','Metaheuristics + YAGO / Wikidata.','https://github.com/perrosdatos/msc_ai_kw_project']];
+runList.innerHTML=P.map(p=>{let v=.9,d='';for(let i=0;i<=40;i++){v=v*.93+Math.random()*.05;d+=`${i?'L':'M'}${i*5},${44-(1-v)*40}`}
+  return`<a class="run" ${p[3]?`href="${p[3]}"`:''}><div class="id"><span>run/${p[0]}</span><i>● finished</i></div><h3>${p[1]}</h3><p>${p[2]}</p><svg viewBox="0 0 200 46" preserveAspectRatio="none"><path d="${d}" fill="none" stroke="#ff6b1a" stroke-width="2"/></svg></a>`}).join('');
+
+// ---------- scene ----------
+// phones: lower resolution, cheaper shadows, fewer props
+const MOB=W3D.isMobile(),LOD=MOB?.55:1;
+const R=new THREE.WebGLRenderer({canvas:c,antialias:true,powerPreference:'high-performance'});R.setPixelRatio(Math.min(devicePixelRatio,MOB?1.5:2));R.shadowMap.enabled=true;R.shadowMap.type=MOB?THREE.PCFShadowMap:THREE.PCFSoftShadowMap;
+const scene=new THREE.Scene();scene.background=new THREE.Color(0xeef1f5);scene.fog=new THREE.Fog(0xeef1f5,16,38);
+const cam=new THREE.PerspectiveCamera(45,1,.1,120);
+scene.add(new THREE.HemisphereLight(0xffffff,0xb8c0cc,.85));
+const sun=new THREE.DirectionalLight(0xffffff,.75);sun.castShadow=true;sun.shadow.mapSize.set(MOB?1024:2048,MOB?1024:2048);
+Object.assign(sun.shadow.camera,{left:-18,right:18,top:18,bottom:-18});scene.add(sun);scene.add(sun.target);
+const ENV=W3D.makeEnv(R,0xc9d0d8,[[0xffffff,[0,7,4],[9,2]],[0x1b1f27,[-7,0,1],[4,9]],[0xffffff,[7,1,3],[2,8]],[0x1b1f27,[0,-6,2],[10,3]],[0xffffff,[-2.5,2.5,8],[5,3.5]],[0x1b1f27,[2.5,-1.5,8],[5,3]],[0xff6b1a,[0,.5,8],[9,.3]]]);
+const globe=W3D.makeGlobe({bg:0xeef1f5,ocean:0xdfe7f0,grid:0xaab6c4,coast:0x5d6675,arc:0xff6b1a,city:0x2f6bff,label:'#11151c',font:'"IBM Plex Mono", monospace'});
+
+const st0={fill:c=>new THREE.MeshStandardMaterial({color:c,roughness:.85,flatShading:true}),edge:null};
+const rnd=n=>{const s=Math.sin(n*127.1)*43758.5453;return s-Math.floor(s)};
+const X=(g,x)=>REG[g].x+x;
+function ground(g,x0,x1,z0,z1,col){const m=new THREE.Mesh(new THREE.PlaneGeometry(x1-x0,z0-z1),new THREE.MeshStandardMaterial({color:col,roughness:1}));
+  m.rotation.x=-Math.PI/2;m.position.set(X(g,(x0+x1)/2),0,(z0+z1)/2);m.receiveShadow=true;scene.add(m);return m}
+function place(obj,g,x,z,ry=0,s=1){obj.position.set(X(g,x),0,z);obj.rotation.y=ry;obj.scale.setScalar(s);scene.add(obj);return obj}
+const gh=new THREE.GridHelper(200,100,0xc2cbd6,0xd4dbe4);gh.position.y=.012;gh.material.transparent=true;gh.material.opacity=.45;scene.add(gh);
+
+// Mexico: green land, Chichén Itzá, jungle
+ground('MX',-80,120,40,-80,0xd3e8d3);
+place(W3D.makeChichenItza({stone:0xe4d9bd,temple:0xd6c7a5}),'MX',4,-14,.4,1);
+place(W3D.makeChichenItza({stone:0xe4d9bd,temple:0xd6c7a5}),'MX',62,-20,-.3,.8);
+for(let i=0;i<110*LOD;i++){const x=-60+rnd(i)*170,z=-5-rnd(i+50)*24;if((Math.abs(x-4)<8&&Math.abs(z+14)<8)||(Math.abs(x-62)<7&&Math.abs(z+20)<7))continue;place(W3D.makeJungleTree(st0),'MX',x,z,rnd(i+3)*6,.7+rnd(i+99)*.8)}
+// Istanbul: shore, mosques, Galata tower, Bosphorus bridge
+ground('IST',-80,80,40,-9,0xe9e2d0);ground('IST',-80,80,-9,-44,0xa9c8e8);ground('IST',-80,80,-44,-90,0xe4dccb);
+place(W3D.makeMosque(st0),'IST',-5,-4.8,.25,.62);
+place(W3D.makeGalata(st0),'IST',11,-6,0,.8);
+place(W3D.makeBridge(st0,{len:44,towerH:8,deck:0xc9ced6,cable:0x5d6675}),'IST',-22,-26,-Math.PI/2);
+place(W3D.makeMosque(st0),'IST',-10,-52,.1,.9);place(W3D.makeMosque(st0),'IST',18,-56,-.3,.7);
+for(let i=0;i<40*LOD;i++){const x=-60+rnd(i+7)*120,z=-46-rnd(i+8)*20;if(Math.abs(x+10)<7||Math.abs(x-18)<6)continue;const h=1+rnd(i+9)*2.5;
+  const b=new THREE.Mesh(new THREE.BoxGeometry(1.6,h,1.6),new THREE.MeshStandardMaterial({color:[0xe8dcc6,0xd9c4a6,0xf0e7d6][i%3],roughness:.9}));b.position.set(X('IST',x),h/2,z);b.castShadow=true;scene.add(b)}
+for(let i=0;i<14;i++)place(W3D.makePine(st0,{color:0x2e5a3a,h:.8}),'IST',-40+i*6+rnd(i)*3,-6-rnd(i+2)*2,0,1);
+// Brazil: Corcovado + Christ, Sugarloaf in the bay, beach, palms
+ground('BRA',-80,80,40,-10,0xdfe9c8);ground('BRA',-80,80,-10,-14,0xf1e2b8);ground('BRA',-80,80,-14,-90,0x9fc4e6);
+place(W3D.makeCorcovado(st0,{h:6.5,rock:0x4f7f50}),'BRA',-5,-20,0,1);
+place(W3D.makeSugarloaf(st0,{h:8,rock:0x7d8a78}),'BRA',17,-20,0,1);
+for(let i=0;i<26;i++){const x=-50+i*4+rnd(i)*2;if(Math.abs(x-3.3)<2.5)continue;place(W3D.makePalm(st0,{h:3.4+rnd(i+1)}),'BRA',x,-4-rnd(i+5)*6,rnd(i+2)*6,1)}
+// Sweden: pines with snow, red cottages, Turning Torso
+ground('SWE',-80,80,40,-80,0xe2e8f1);
+for(let i=0;i<80*LOD;i++){const x=-60+rnd(i+20)*120,z=-5-rnd(i+21)*24;if(x>8&&x<24&&z>-12)continue;if(Math.abs(x-36)<4&&Math.abs(z+14)<4)continue;place(W3D.makePine(st0,{snow:0xffffff,h:.8+rnd(i)*.6}),'SWE',x,z,0,1)}
+for(let i=0;i<7;i++)place(W3D.makeCottage(st0),'SWE',-34+i*5+rnd(i)*2,-7-rnd(i+4)*4,rnd(i)*.6-.3,.9);
+place(W3D.makeTurningTorso(st0),'SWE',36,-14,0,1.1);
+
+// ---------- stations: pedestal + logo at every stop ----------
+const white=new THREE.MeshStandardMaterial({color:0xfafafa,roughness:.3});
+const ink=c=>new THREE.MeshStandardMaterial({color:c,roughness:.35,metalness:.1});
+const props={};
+function station(ni,obj,y=2.3){const n=ND[ni],g=new THREE.Group();g.position.set(X(n.g,n.x)+3.3,0,-1.6);scene.add(g);
+  const ped=new THREE.Mesh(new THREE.CylinderGeometry(1,1.1,.5,40),white);ped.position.y=.25;ped.castShadow=ped.receiveShadow=true;g.add(ped);
+  const ring=new THREE.Mesh(new THREE.TorusGeometry(1.02,.03,8,60),new THREE.MeshBasicMaterial({color:0xff6b1a}));ring.rotation.x=Math.PI/2;ring.position.y=.5;g.add(ring);
+  const h=new THREE.Group();h.position.y=y;h.add(obj);g.add(h);h.userData={i:ni,y};props[ni]=h;return h}
+station(2,W3D.makeBall(.7,new THREE.MeshStandardMaterial({color:0xffffff,roughness:.4,flatShading:true}),0x1b1f27),1.4);
+station(6,W3D.makeTrophy(new THREE.MeshStandardMaterial({color:0xffc83d,metalness:1,roughness:.18,envMap:ENV})),.55).scale.setScalar(1.3);
+const sunG=new THREE.Group();sunG.add(new THREE.Mesh(new THREE.CylinderGeometry(.7,.7,.15,48),ink(0xff9a1a)).rotateX(Math.PI/2));
+for(let k=0;k<12;k++){const r=new THREE.Mesh(new THREE.BoxGeometry(.09,.32,.12),ink(0xffc83d));const a=k/12*Math.PI*2;r.position.set(Math.sin(a)*.98,Math.cos(a)*.98,0);r.rotation.z=-a;sunG.add(r)}
+sunG.position.y=.7;const sesol=station(11,sunG,1.6);
+const apple=W3D.makeSvgLogo(W3D.APPLE_SVG,{height:2.8,material:new THREE.MeshStandardMaterial({color:0xeef1f4,metalness:1,roughness:.1,envMap:ENV})});station(13,apple,2.2);
+// the MSc stop gets the neural network with a live forward pass
+const net=W3D.makeNetwork({sizes:[3,5,6,5,3],dx:1.35,dy:.62,radius:.17});
+net.position.set(X('SWE',13)+1.2,3.5,-3.4);scene.add(net);const ju=station(12,new THREE.Group(),1.2);
+W3D.loadFont().then(font=>{
+  const wm=(t,c,w,parent,y=0)=>{const m=W3D.makeWordmark(font,t,{width:w,depth:.3,material:ink(c)});m.position.y=y;parent.add(m);return m};
+  const unam=new THREE.Group();const plaque=new THREE.Mesh(new THREE.BoxGeometry(3,1.1,.2),ink(0x003d79));plaque.castShadow=true;unam.add(plaque);wm('UNAM',0xc59a3d,2.4,unam).position.z=.18;station(4,unam,1.4);
+  station(8,wm('MTEXPERTS',0x1b1f27,3.2,new THREE.Group()),1.2);
+  station(9,wm('BBVA',0x004481,2.8,new THREE.Group()),1.3);
+  wm('SESOL',0xff6b1a,2,sesol,-.5);
+  wm('JU',0x1b1f27,1,ju);
+  wm('via AFRY',0x1b1f27,1.4,props[13],-1.5);
+  wm('ROBOCUP',0x1b1f27,1.8,props[2],-.75);
+}).catch(()=>{});
+
+// ---------- robot, plane, clouds ----------
+function makeRobot(){const g=new THREE.Group(),b=new THREE.Group();g.add(b);
+  const wh=new THREE.MeshStandardMaterial({color:0xfafafa,roughness:.25}),dark=new THREE.MeshStandardMaterial({color:0x1b1f27,roughness:.4}),
+    orange=new THREE.MeshStandardMaterial({color:0xff6b1a,roughness:.4}),eyeM=new THREE.MeshBasicMaterial({color:0x5fd4ff});
+  const add=(geo,m,p,x,y,z)=>{const o=new THREE.Mesh(geo,m);o.position.set(x,y,z);o.castShadow=true;p.add(o);return o};
+  const torso=add(new THREE.CylinderGeometry(.42,.36,.8,24),wh,b,0,1.25,0);add(new THREE.CylinderGeometry(.43,.43,.08,24),orange,b,0,1.5,0);
+  add(new THREE.CircleGeometry(.12,20),orange,b,0,1.2,.38).rotation.x=-.1;
+  const head=new THREE.Group();head.position.y=2.05;b.add(head);
+  add(new THREE.SphereGeometry(.45,32,24),wh,head,0,0,0).scale.set(1.15,.9,1);
+  add(new THREE.SphereGeometry(.41,32,24,Math.PI*.15,Math.PI*.7,Math.PI*.3,Math.PI*.4),dark,head,0,0,.06).scale.set(1.15,.9,1);
+  const eL=add(new THREE.SphereGeometry(.07,12,10),eyeM,head,-.15,.02,.44),eR=add(new THREE.SphereGeometry(.07,12,10),eyeM,head,.15,.02,.44);
+  add(new THREE.CylinderGeometry(.015,.015,.3),dark,head,0,.5,0);const tip=add(new THREE.SphereGeometry(.06,12,10),new THREE.MeshBasicMaterial({color:0xff6b1a}),head,0,.66,0);
+  const cap=new THREE.Group();cap.position.y=.42;head.add(cap);add(new THREE.BoxGeometry(.95,.05,.95),dark,cap,0,.08,0).rotation.y=Math.PI/4;add(new THREE.CylinderGeometry(.3,.32,.16,16),dark,cap,0,0,0);
+  add(new THREE.BoxGeometry(.03,.3,.03),orange,cap,.42,-.06,0);cap.scale.setScalar(.001);
+  const limb=(geo,m,x,y,len)=>{const p=new THREE.Group();p.position.set(x,y,0);add(geo,m,p,0,-len/2,0);b.add(p);return p};
+  const aL=limb(new THREE.CylinderGeometry(.08,.07,.6,12),wh,-.52,1.55,.6),aR=limb(new THREE.CylinderGeometry(.08,.07,.6,12),wh,.52,1.55,.6);
+  const lL=limb(new THREE.CylinderGeometry(.11,.13,.85,12),dark,-.18,.85,.85),lR=limb(new THREE.CylinderGeometry(.11,.13,.85,12),dark,.18,.85,.85);
+  g.tick=(t,s,look,grad)=>{const a=Math.sin(t*8);aL.rotation.x=a*.8*s;aR.rotation.x=-a*.8*s;lL.rotation.x=-a*.7*s;lR.rotation.x=a*.7*s;
+    b.position.y=Math.abs(Math.cos(t*8))*.06*s;torso.rotation.y=Math.sin(t*8)*.08*s;
+    head.rotation.y+=(look.x-head.rotation.y)*.1;head.rotation.x+=(look.y-head.rotation.x)*.1;
+    eL.scale.y=eR.scale.y=(t%4)<.12?.15:1.4;tip.material.color.setHSL(.06,1,.5+Math.sin(t*4)*.15);
+    cap.scale.setScalar(Math.max(.001,cap.scale.x+((grad?1:0)-cap.scale.x)*.08))};
+  return g}
+const bot=makeRobot();scene.add(bot);
+const plane=W3D.makePlane();plane.rotation.y=-Math.PI/2;scene.add(plane);
+const clouds=W3D.makeCloudSea(70,{spread:20});clouds.rotation.y=-Math.PI/2;scene.add(clouds);
+
+// ---------- interaction ----------
+let kT=0,k=0,speed=0,mx=0,my=0,t=0,last=performance.now(),face=1;
+addEventListener('mousemove',e=>{mx=e.clientX/innerWidth*2-1;my=e.clientY/innerHeight*2-1});
+addEventListener('scroll',()=>kT=W3D.scrollK(nodeEls),{passive:true});kT=W3D.scrollK(nodeEls);
+W3D.mountSwitcher('lab',{bg:'rgba(255,255,255,.85)',fg:'#11151c',acc:'#11151c',accFg:'#ffffff',border:'rgba(17,21,28,.1)',radius:'999px',font:"500 12px 'IBM Plex Mono', monospace"});
+const ray=new THREE.Raycaster();
+addEventListener('click',e=>{if(e.target.closest('a,.card,.run,.bp'))return;ray.setFromCamera({x:e.clientX/innerWidth*2-1,y:-e.clientY/innerHeight*2+1},cam);
+  const h=ray.intersectObjects(Object.values(props),true)[0];if(!h)return;let o=h.object;while(o&&!(o.userData&&'i' in o.userData))o=o.parent;
+  if(o)nodeEls[o.userData.i].scrollIntoView({behavior:'smooth',block:'center'})});
+let PORT=false;
+function resize(){R.setSize(innerWidth,innerHeight,false);cam.aspect=innerWidth/innerHeight;PORT=cam.aspect<1;cam.fov=PORT?58:45;cam.updateProjectionMatrix();globe.resize(cam.aspect)}
+addEventListener('resize',resize);resize();
+const FORCE=/#k=([\d.]+)/.exec(location.hash); // preview hook: 5-ai-robotics.html#k=4.5 (node index)
+if(location.hash.includes('clean'))document.querySelector('main').style.visibility='hidden';
+const sm=THREE.MathUtils.smoothstep,clamp=THREE.MathUtils.clamp;
+(function loop(now){const dt=Math.min(.05,(now-last)/1000);last=now;t+=dt;
+  if(FORCE)kT=k=+FORCE[1];
+  const prev=k;k+=(kT-k)*Math.min(1,dt*2.5);const v=(k-prev)/dt;
+  speed+=((Math.abs(v)>.03?1:0)-speed)*Math.min(1,dt*6);if(Math.abs(v)>.03)face=Math.sign(v);
+  const st=route(k),p=st.pos,n=ND[st.node];
+  // robot / plane / clouds
+  bot.position.copy(p);bot.scale.setScalar(Math.max(.001,1-st.show*1.2));
+  const wantRot=speed>.5?(face>0?Math.PI/2:-Math.PI/2):0;bot.rotation.y+=(wantRot-bot.rotation.y)*Math.min(1,dt*6);
+  bot.tick(t,speed,{x:speed>.5?0:mx*.6,y:speed>.5?0:my*.3},k>11.7);
+  plane.position.set(p.x,.55+st.alt,p.z);plane.scale.setScalar(Math.max(.001,st.show*1.1));
+  plane.inner.rotation.x=st.pitch;plane.inner.rotation.z=Math.sin(t*1.3)*.1*st.alt/FLY_H;
+  const cl=sm(st.alt,FLY_H*.3,FLY_H*.85);clouds.position.set(p.x,FLY_H-1.6,-3);clouds.update(st.dist||0);clouds.setOpacity(cl);
+  scene.fog.near=16-10*cl;scene.fog.far=38-16*cl;
+  // props
+  Object.values(props).forEach(h=>{const g=h.parent,near=Math.max(0,1-Math.abs(p.x-g.position.x+3.3)/6);h.rotation.y=Math.sin(t*.6+h.userData.i)*.35;h.position.y=h.userData.y+Math.sin(t*1.5+h.userData.i)*.08+near*.25});
+  apple.rotation.y=t*.5;
+  net.tick(t,dt,clamp(1.6-Math.abs(p.x-X('SWE',13))/5,0,1));
+  layer.textContent=st.leg?`in flight · ${st.leg.from} → ${st.leg.to} · ${st.leg.y}`:n.m!=null?`${M[n.m].y} · ${M[n.m].t} · ${M[n.m].p}`:'Mexico City · start';
+  const off=innerWidth>800?-3.2:PORT?-.2:0,dz=PORT?3.5:0,dy=PORT?1.4:0;
+  cam.position.set(p.x+off-mx*.6+1.5,3.4+my*.3+st.alt*.8+dy*.6,10+st.alt*.4+dz);cam.lookAt(p.x+off+1.5,2+st.alt*.9+dy,0);
+  sun.position.set(p.x+5,10,8);sun.target.position.set(p.x,0,0);gh.position.x=Math.round(p.x/2)*2;
+  R.render(scene,cam);
+  // globe during cruise (covers the jump between regions)
+  const gf=st.leg?sm(st.u,.3,.4)*(1-sm(st.u,.6,.7)):0;
+  if(gf>.001){globe.update(st.leg,clamp((st.u-.3)/.4,0,1),gf);R.autoClear=false;R.clearDepth();R.render(globe.scene,globe.cam);R.autoClear=true}
+  requestAnimationFrame(loop)})(last);
+</script>
+</body>
+</html>

@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neon Run — Juan Carlos González</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--mx:#19ff9c;--se:#00d0ff;--ist:#ff2b6a;--bra:#ffd23f;--yel:#ffd23f;--bg:#03070a;--ink:#e6fff4;--dim:#87a8a0;--acc:var(--mx)}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Share Tech Mono',monospace;overflow-x:hidden}
+#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0}
+.scan{position:fixed;inset:0;pointer-events:none;z-index:1;background:repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 1px,transparent 1px 3px)}
+main{position:relative;z-index:2}
+section{min-height:100vh;padding:12vh 6vw;display:flex;flex-direction:column;justify-content:center}
+.hud{position:fixed;z-index:3;top:16px;left:16px;right:16px;display:flex;justify-content:space-between;font-size:13px;color:var(--acc);text-shadow:0 0 8px var(--acc);pointer-events:none}
+.hud b{color:var(--yel);text-shadow:0 0 8px var(--yel)}
+.bar{position:fixed;z-index:3;left:0;bottom:0;height:3px;background:linear-gradient(90deg,var(--mx),var(--ist),var(--bra),var(--se));box-shadow:0 0 12px var(--se);width:0}
+h1{font-family:Orbitron;font-weight:800;font-size:clamp(36px,8vw,104px);line-height:.95;letter-spacing:.02em}
+h1 .g{position:relative;display:inline-block}
+h1 .g::before,h1 .g::after{content:attr(data-t);position:absolute;inset:0}
+h1 .g::before{color:var(--mx);transform:translate(-3px,0);mix-blend-mode:screen;animation:gl 2.6s infinite steps(1)}
+h1 .g::after{color:var(--se);transform:translate(3px,0);mix-blend-mode:screen;animation:gl 3.1s infinite steps(1) reverse}
+@keyframes gl{0%,92%{clip-path:inset(0 0 0 0)}93%{clip-path:inset(20% 0 55% 0)}95%{clip-path:inset(60% 0 10% 0)}97%{clip-path:inset(5% 0 80% 0)}}
+.tag{color:var(--yel);letter-spacing:.3em;font-size:14px;margin-bottom:18px}
+.sub{max-width:560px;margin-top:22px;color:var(--dim);font-size:17px;line-height:1.5}
+.cta{margin-top:36px;color:var(--mx);animation:blink 1.2s infinite}
+@keyframes blink{50%{opacity:.25}}
+h2{font-family:Orbitron;font-size:clamp(26px,4vw,44px);margin-bottom:36px;color:var(--se);text-shadow:0 0 18px rgba(0,208,255,.6)}
+h2 small{display:block;font-family:'Share Tech Mono';font-size:14px;color:var(--mx);letter-spacing:.3em;margin-bottom:6px;text-shadow:none}
+.journey{min-height:auto;display:block}
+.ms{min-height:85vh;display:flex;align-items:center}
+.ms.r{justify-content:flex-end}
+.card{--c:var(--mx);max-width:420px;background:rgba(3,10,10,.72);backdrop-filter:blur(6px);border:1px solid var(--c);padding:22px 24px;clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,18px 100%,0 calc(100% - 18px));box-shadow:inset 0 0 30px color-mix(in srgb,var(--c) 18%,transparent)}
+.card .yr{font-family:Orbitron;font-size:44px;color:var(--yel);text-shadow:0 0 14px rgba(255,210,63,.6)}
+.card .pl{font-size:12px;letter-spacing:.25em;color:var(--c);margin:2px 0 10px}
+.card h3{font-family:Orbitron;font-size:18px;margin-bottom:8px}
+.card p{color:#c4dcd5;line-height:1.5;font-size:15px}
+/* flights: a tall scroll stretch with a sticky boarding pass */
+.flt{height:190vh;position:relative}
+.bp{position:sticky;top:calc(100vh - 220px);top:calc(100svh - 220px);margin:0 auto;width:min(440px,100%);border:1px solid var(--yel);background:rgba(3,7,10,.82);backdrop-filter:blur(6px);font-size:12px;box-shadow:0 0 30px rgba(255,210,63,.18)}
+.bp-h{display:flex;justify-content:space-between;padding:8px 14px;background:var(--yel);color:#03070a;font-family:Orbitron;font-weight:800;letter-spacing:.15em}
+.bp-r{display:flex;align-items:center;justify-content:space-between;padding:12px 18px 6px}
+.bp-r b{display:block;font-family:Orbitron;font-size:30px;color:var(--ink)}
+.bp-r small,.bp-f small{color:var(--dim);letter-spacing:.2em;font-size:10px}
+.bp-r i{font-style:normal;color:var(--yel);font-size:11px}
+.bp-r .arr{color:var(--yel);font-size:22px;flex:1;text-align:center;border-bottom:1px dashed rgba(255,210,63,.5);margin:0 14px 14px}
+.bp-f{display:flex;justify-content:space-between;padding:8px 18px 12px;border-top:1px dashed rgba(255,210,63,.4)}
+.bp-f b{display:block;color:var(--ink);font-weight:400;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.sk{background:rgba(3,10,14,.78);border:1px solid rgba(0,208,255,.35);padding:16px;transition:.2s}
+.sk:hover{border-color:var(--mx);transform:translateY(-3px) skewX(-2deg);box-shadow:0 0 24px rgba(25,255,156,.3)}
+.sk .n{display:flex;justify-content:space-between;margin-bottom:10px}
+.sk .t{height:6px;background:#0c2228}
+.sk .t i{display:block;height:100%;background:linear-gradient(90deg,var(--mx),var(--se));box-shadow:0 0 10px var(--se);width:0;transition:width 1.2s}
+.pj{background:rgba(3,10,14,.82);border:1px solid rgba(25,255,156,.35);padding:22px;display:flex;flex-direction:column;gap:10px;transition:.2s;color:inherit;text-decoration:none}
+.pj:hover{border-color:var(--yel);box-shadow:0 0 30px rgba(255,210,63,.25)}
+.pj h3{font-family:Orbitron;font-size:17px;color:var(--yel)}
+.pj p{color:#c4dcd5;line-height:1.5;font-size:15px;flex:1}
+.pj .tg span{display:inline-block;font-size:11px;border:1px solid var(--se);color:var(--se);padding:2px 7px;margin:0 6px 6px 0}
+.contact a{color:var(--se);font-size:20px;display:block;margin:8px 0;text-decoration:none}
+.contact a:hover{color:var(--mx)}
+@media (max-width:760px){section{padding:10vh 18px}.ms,.ms.r{justify-content:center}.card{max-width:100%;padding:16px 18px}.card .yr{font-size:32px}.card p{font-size:14px}
+  .hud{font-size:10px;top:10px;left:12px;right:12px}.flt{height:170vh}.bp{top:calc(100svh - 270px)}.bp-r b{font-size:24px}.bp-f{font-size:11px;gap:8px}.sub{font-size:15px}}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas><div class="scan"></div>
+<div class="hud" id="hud"><span>LOC: <b id="loc">MEXICO CITY</b></span><span>YEAR: <b id="yr">2011</b></span></div>
+<div class="bar" id="bar"></div>
+<main>
+  <section>
+    <div class="tag">// NEON RUN · PORTFOLIO v3</div>
+    <h1><span class="g" data-t="JUAN CARLOS">JUAN CARLOS</span><br><span class="g" data-t="GONZÁLEZ">GONZÁLEZ</span></h1>
+    <p class="sub">Applied AI Lead · ML Engineer. 9+ years turning LLMs, agents and models into production systems, from Chichén Itzá country to Malmö.</p>
+    <div class="cta">▼ SCROLL TO RUN</div>
+  </section>
+
+  <section class="journey" id="journey">
+    <h2 data-node><small>01 / JOURNEY</small>The run so far</h2>
+    <div id="nodeList"></div>
+  </section>
+
+  <section id="skills">
+    <h2><small>02 / LOADOUT</small>Skills</h2>
+    <div class="grid" id="skList"></div>
+  </section>
+
+  <section id="projects">
+    <h2><small>03 / MISSIONS</small>Projects</h2>
+    <div class="grid" id="pjList"></div>
+  </section>
+
+  <section class="contact">
+    <h2><small>04 / JACK IN</small>Contact</h2>
+    <a href="mailto:carlosgonzagular@gmail.com">&gt; carlosgonzagular@gmail.com</a>
+    <a href="https://www.github.com/perrosdatos">&gt; github/perrosdatos</a>
+    <a href="https://www.linkedin.com/in/juancarlosgonzalezaguilar/">&gt; linkedin/juancarlosgonzalezaguilar</a>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/SVGLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<script src="shared/world3d.js"></script>
+<script>
+const M=[
+ {y:'2011',place:'ISTANBUL, TR',t:'RoboCup & State Youth Award',d:'Competed at RoboCup in Istanbul and won the State Youth Award for Technological Innovation.'},
+ {y:'2012',place:'CDMX, MX',t:'UNAM · Applied Math & Computing',d:'Started at UNAM. 1st place PUMATRON, programming contests, graduated with honors.'},
+ {y:'2014',place:'BRAZIL',t:'Robotics champion',d:'1st place Mexican Robotics Tournament (IEEE), then the Latin American Robotics Competition in Brazil.'},
+ {y:'2016',place:'CDMX, MX',t:'MTEXPERTS · Data Scientist',d:'Queue prediction for retail: +10% service efficiency. Left after winning a SAS scholarship.'},
+ {y:'2017',place:'CDMX, MX',t:'BBVA · Senior Data Scientist',d:'Graph + NLP platform behind €350M in loans, models over 22M accounts, 2× datathon winner.'},
+ {y:'2022',place:'JÖNKÖPING, SE',t:'SESOL · Lead Data Scientist',d:'Moved to Sweden. Led 8+ people, AI products with €600K+ yearly savings, RAG + LangGraph agents.'},
+ {y:'2024',place:'JÖNKÖPING, SE',t:'MSc AI Engineering',d:'Jönköping University. Thesis on scaling multi-agent RL with a custom JAX wrapper.'},
+ {y:'2025',place:'MALMÖ, SE',t:'Apple · ML Engineer (via AFRY)',d:'Current chapter. Details under NDA.'}];
+const S=[['Python',95],['LLMs · RAG · Agents',92],['PyTorch / TensorFlow',88],['JAX',80],['MLOps · AWS · Databricks',85],['Spark · SQL',87],['Reinforcement Learning',78],['Team leadership',90]];
+const P=[
+ {n:'Lux AI S3 · MARL',d:'Thesis: MAPPO, QMIX and MASAC with a custom JAX wrapper for faster multi-agent training.',tags:['JAX','PyTorch','BenchMARL']},
+ {n:'DFS OCR Reader',d:'ML + OCR to extract and analyse text from Mexican federal security archives.',tags:['YOLOv5','Tesseract','BERT'],url:'https://github.com/perrosdatos/files_dfs_ocr_reader'},
+ {n:'Semantic Music Recs',d:'Metaheuristics + YAGO/Wikidata integration for personalised music recommendations.',tags:['SPARQL','Flask'],url:'https://github.com/perrosdatos/msc_ai_kw_project'},
+ {n:'GA for the TSP',d:'Genetic algorithm vs branch-and-bound: near-optimal tours at a fraction of the cost.',tags:['Evolutionary','Python']}];
+
+// ---------- map regions + route ----------
+// Each country is its own patch of the map, far apart; flights switch between them while the globe is up.
+const REG={
+  MX:{x:0,main:0x19ff9c,css:'var(--mx)',pal:[0x19ff9c,0x7dff3a,0xffd23f],name:'MEXICO CITY'},
+  IST:{x:400,main:0xff2b6a,css:'var(--ist)',pal:[0xff2b6a,0xff7ad9,0xffd23f],name:'ISTANBUL'},
+  BRA:{x:-400,main:0xffd23f,css:'var(--bra)',pal:[0xffd23f,0x19ff9c,0x2f8bff],name:'BRAZIL'},
+  SWE:{x:800,main:0x00d0ff,css:'var(--se)',pal:[0x00d0ff,0x3a7bff,0xffd23f],name:'SWEDEN'}};
+const LEGS=W3D.FLIGHTS;
+const ND=[{g:'MX',z:0},{f:0},{g:'IST',z:0,m:0},{f:1},{g:'MX',z:-24,m:1},{f:2},{g:'BRA',z:0,m:2},{f:3},{g:'MX',z:-50,m:3},{g:'MX',z:-72,m:4},{f:4},{g:'SWE',z:0,m:5},{g:'SWE',z:-26,m:6},{g:'SWE',z:-52,m:7}];
+const nodes=ND.map(n=>n.f!=null?{type:'flight',leg:LEGS[n.f]}:{type:'ground',pos:new THREE.Vector3(REG[n.g].x,0,n.z)});
+const FLY_H=9,route=W3D.makeRoute(nodes,{walk:new THREE.Vector3(0,0,-8),Dtot:110,H:FLY_H});
+
+// ---------- DOM ----------
+let side=0;
+nodeList.innerHTML=ND.slice(1).map(n=>{
+  if(n.f!=null){const L=LEGS[n.f],a=W3D.CITIES[L.from],b=W3D.CITIES[L.to];
+    return`<div class="flt" data-node><div class="bp"><div class="bp-h"><span>BOARDING PASS</span><span>✈ JC${L.y}</span></div>
+      <div class="bp-r"><div><small>FROM</small><b>${L.from}</b><i>${a[2]}</i></div><div class="arr">✈</div><div style="text-align:right"><small>TO</small><b>${L.to}</b><i>${b[2]}</i></div></div>
+      <div class="bp-f"><span><small>PASSENGER</small><b>J.C. GONZÁLEZ</b></span><span><small>YEAR</small><b>${L.y}</b></span><span><small>PURPOSE</small><b>${L.why}</b></span></div></div></div>`}
+  const m=M[n.m];return`<div class="ms ${side++%2?'r':''}" data-node><div class="card" style="--c:${REG[n.g].css}"><div class="yr">${m.y}</div><div class="pl">${m.place}</div><h3>${m.t}</h3><p>${m.d}</p></div></div>`}).join('');
+const nodeEls=[...document.querySelectorAll('[data-node]')];
+skList.innerHTML=S.map(s=>`<div class="sk"><div class="n"><span>${s[0]}</span><span>${s[1]}</span></div><div class="t"><i data-w="${s[1]}"></i></div></div>`).join('');
+pjList.innerHTML=P.map(p=>`<a class="pj" ${p.url?`href="${p.url}"`:''}><h3>${p.n}</h3><p>${p.d}</p><div class="tg">${p.tags.map(t=>`<span>${t}</span>`).join('')}</div></a>`).join('');
+new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.querySelectorAll('i').forEach(i=>i.style.width=i.dataset.w+'%')}),{threshold:.3}).observe(skills);
+
+// ---------- renderer, bloom, globe overlay ----------
+// phones: lower resolution, no MSAA, fewer props
+const MOB=W3D.isMobile(),LOD=MOB?.55:1;
+const R=new THREE.WebGLRenderer({canvas:bg,antialias:!MOB,powerPreference:'high-performance'});R.setPixelRatio(Math.min(devicePixelRatio,MOB?1:1.5));
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x03070a);scene.fog=new THREE.FogExp2(0x03070a,.038);
+const cam=new THREE.PerspectiveCamera(60,1,.1,260);
+const ENV=W3D.makeEnv(R,0x010203,[[0x19ff9c,[-7,1,4],[1.5,9]],[0x00d0ff,[7,1,4],[1.5,9]],[0xffffff,[0,8,3],[5,.8]],[0xffd23f,[0,-1,-8],[6,.6]]]);
+const globe=W3D.makeGlobe({bg:0x03070a,ocean:0x04121a,grid:0x0f6f8f,coast:0x19ff9c,arc:0xffd23f,city:0xff2b6a,label:'#ffd23f',font:'Orbitron, sans-serif',plane:{body:0x0a1a1a,accent:0xffd23f,glass:0x00f0ff,edge:0x19ff9c}});
+const composer=new THREE.EffectComposer(R);composer.addPass(new THREE.RenderPass(scene,cam));
+const globePass=new THREE.RenderPass(globe.scene,globe.cam);globePass.clear=false;globePass.clearDepth=true;globePass.enabled=false;composer.addPass(globePass);
+composer.addPass(new THREE.UnrealBloomPass(new THREE.Vector2(256,256),.75,.45,.32));
+scene.add(new THREE.AmbientLight(0x60807a,.9));
+const key=new THREE.PointLight(0x19ff9c,2,30);scene.add(key);
+const rim=new THREE.PointLight(0x00d0ff,2,30);scene.add(rim);
+const grid=new THREE.GridHelper(300,150,0x19ff9c,0x0d3a2a);scene.add(grid);
+
+// ---------- world building helpers ----------
+const neon=(c,i=.9)=>new THREE.MeshStandardMaterial({color:c,emissive:c,emissiveIntensity:i,metalness:.3,roughness:.4});
+const neonStyle=edge=>({fill:()=>new THREE.MeshStandardMaterial({color:0x05090c,roughness:.9}),edge,edgeOpacity:.85});
+const rnd=n=>{const s=Math.sin(n*127.1)*43758.5453;return s-Math.floor(s)};
+function road(reg,z0,z1){const r=REG[reg],len=z0-z1;
+  const m=new THREE.Mesh(new THREE.PlaneGeometry(4,len),new THREE.MeshStandardMaterial({color:0x061014,metalness:.3,roughness:.5}));m.rotation.x=-Math.PI/2;m.position.set(r.x,.01,(z0+z1)/2);scene.add(m);
+  [-2,2].forEach(x=>{const l=new THREE.Mesh(new THREE.BoxGeometry(.06,.05,len),new THREE.MeshBasicMaterial({color:r.main}));l.position.set(r.x+x,.03,(z0+z1)/2);scene.add(l)})}
+function city(reg,z0,z1,count,avoid=()=>false,hMax=14,seed=0){const r=REG[reg];count=Math.round(count*LOD);
+  for(let i=0;i<count;i++){const w=1+rnd(i+seed)*2.5,h=2+rnd(i+seed+.3)*hMax,d=1+rnd(i+seed+.6)*3,sd=i%2?1:-1,x=sd*(4+rnd(i+seed+.9)*12),z=z0-rnd(i+seed+.12)*(z0-z1);
+    if(avoid(x,z))continue;
+    const b=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshStandardMaterial({color:0x05080c,roughness:.9}));b.position.set(r.x+x,h/2,z);scene.add(b);
+    const e=new THREE.LineSegments(new THREE.EdgesGeometry(b.geometry),new THREE.LineBasicMaterial({color:r.pal[i%3],transparent:true,opacity:.5}));e.position.copy(b.position);scene.add(e)}}
+function place(obj,reg,x,z,ry=0,s=1){obj.position.set(REG[reg].x+x,0,z);obj.rotation.y=ry;obj.scale.setScalar(s);scene.add(obj);return obj}
+function water(reg,x0,x1,z0,z1,col){const m=new THREE.Mesh(new THREE.PlaneGeometry(x1-x0,z0-z1),new THREE.MeshStandardMaterial({color:0x020812,metalness:.8,roughness:.3}));
+  m.rotation.x=-Math.PI/2;m.position.set(REG[reg].x+(x0+x1)/2,.02,(z0+z1)/2);scene.add(m);
+  const g=new THREE.GridHelper(Math.max(x1-x0,z0-z1),40,col,col);g.material.transparent=true;g.material.opacity=.25;g.position.set(REG[reg].x+(x0+x1)/2,.04,(z0+z1)/2);scene.add(g)}
+function textTex(a,b,col){const c=document.createElement('canvas');c.width=512;c.height=256;const x=c.getContext('2d');
+  x.strokeStyle=col;x.lineWidth=6;x.strokeRect(6,6,500,244);x.fillStyle=col;x.shadowColor=col;x.shadowBlur=20;
+  x.font='800 92px Orbitron, sans-serif';x.fillText(a,30,120);x.font='34px "Share Tech Mono", monospace';x.fillText(b.slice(0,26),30,190);return new THREE.CanvasTexture(c)}
+const hexCss=h=>'#'+h.toString(16).padStart(6,'0');
+
+// ---------- Mexico: Chichén Itzá + neon city ----------
+road('MX',70,-140);
+const PYR=[[-11.5,-22,.5,1.3],[15,-96,-.4,1]];
+PYR.forEach(([x,z,r,s])=>place(W3D.makeChichenItza({stone:0x06200f,temple:0x0a2a16,edge:0x19ff9c,edgeOpacity:1}),'MX',x,z,r,s));
+city('MX',60,-140,170,(x,z)=>PYR.some(p=>Math.abs(x-p[0])<9*p[3]&&Math.abs(z-p[1])<9*p[3]));
+// ---------- Istanbul: mosques, Galata tower, Bosphorus bridge ----------
+road('IST',70,-21);road('IST',-60,-80);
+const stIST=neonStyle(0xff2b6a),stGold=neonStyle(0xffd23f);
+place(W3D.makeMosque(stIST),'IST',-11,-14,.3,1.4);place(W3D.makeMosque(stIST),'IST',13,20,-.5,1);
+place(W3D.makeGalata(stGold),'IST',8,-12,0,1.2);
+water('IST',-60,60,-22,-60,0xff2b6a);
+place(W3D.makeBridge(stIST,{len:40,towerH:10,deck:0x05090c,cable:0xff7ad9}),'IST',0,-21);
+city('IST',60,28,40,(x,z)=>Math.abs(x-13)<7&&Math.abs(z-20)<7,9,5);
+city('IST',-62,-80,16,(x,z)=>Math.abs(x+14)<7,8,9);place(W3D.makeMosque(stIST),'IST',-14,-70,.2,.9);
+// ---------- Brazil: Corcovado, Sugarloaf, palms, bay ----------
+road('BRA',70,-75);
+place(W3D.makeCorcovado(neonStyle(0x19ff9c),{h:15}),'BRA',-16,-26,0,1);
+water('BRA',8,70,40,-75,0x2f8bff);
+place(W3D.makeSugarloaf(neonStyle(0xffd23f),{h:10}),'BRA',13,-22,0,1);
+for(let z=60;z>-70;z-=7)[-1,1].forEach(s=>{if(s>0&&z<36)return;place(W3D.makePalm(neonStyle(0x19ff9c),{h:4}),'BRA',s*3.8,z+rnd(z)*2,rnd(z+s)*6,1)});
+city('BRA',60,-75,60,(x,z)=>x>6||(Math.abs(x+16)<10&&Math.abs(z+26)<10)||(z<10&&z>-30),3.5,13);
+// ---------- Sweden: pines, red cottages, Turning Torso ----------
+road('SWE',70,-80);
+for(let i=0;i<70*LOD;i++){const sd=i%2?1:-1,x=sd*(5+rnd(i+40)*18),z=65-rnd(i+41)*140;if(z<-40&&Math.abs(x)<16)continue;place(W3D.makePine(neonStyle(0x00d0ff),{h:1+rnd(i)*.8}),'SWE',x,z,0,1)}
+for(let i=0;i<10;i++){const sd=i%2?1:-1;place(W3D.makeCottage(neonStyle(0xff4d4d)),'SWE',sd*(5+rnd(i+70)*6),30-i*5,sd*Math.PI/2,1)}
+place(W3D.makeTurningTorso(neonStyle(0xffffff)),'SWE',12,-66,0,1.1);
+city('SWE',-38,-80,26,(x,z)=>Math.abs(x-12)<4,10,21);
+
+// ---------- year signs + floating logos at every stop ----------
+const logos=[];
+function hang(obj,ni,y=5.8){const n=ND[ni],h=new THREE.Group();h.add(obj);h.position.set(REG[n.g].x+(ni%4<2?1.6:-1.6),y,n.z-8);h.userData={i:ni,y};scene.add(h);logos.push(h);return h}
+ND.forEach((n,ni)=>{if(n.m==null)return;const col=hexCss(REG[n.g].main),sd=ni%4<2?-1:1;
+  const s=new THREE.Mesh(new THREE.PlaneGeometry(4,2),new THREE.MeshBasicMaterial({map:textTex(M[n.m].y,M[n.m].place,col),transparent:true,side:THREE.DoubleSide,depthWrite:false}));
+  s.position.set(REG[n.g].x+sd*3.6,2.8,n.z-5);s.rotation.y=sd*-.35;scene.add(s)});
+hang(W3D.makeBall(.9,new THREE.MeshStandardMaterial({color:0x05080c,roughness:.5}),0xff2b6a),2);
+hang(W3D.makeTrophy(new THREE.MeshStandardMaterial({color:0xffc83d,metalness:1,roughness:.2,envMap:ENV,emissive:0x553300,emissiveIntensity:.3})),6,4.6).scale.setScalar(1.6);
+const sun=new THREE.Group();sun.add(new THREE.Mesh(new THREE.CircleGeometry(.8,48),new THREE.MeshBasicMaterial({color:0xffa31a,side:THREE.DoubleSide})));
+for(let k=0;k<12;k++){const r=new THREE.Mesh(new THREE.BoxGeometry(.08,.35,.02),new THREE.MeshBasicMaterial({color:0xffd23f}));const a=k/12*Math.PI*2;r.position.set(Math.sin(a)*1.1,Math.cos(a)*1.1,0);r.rotation.z=-a;sun.add(r)}
+sun.position.y=1.2;const sesol=hang(sun,11);
+const net=W3D.makeNetwork({sizes:[3,5,6,5,3],dx:1.2,dy:.55,radius:.14,nodeColor:0x0a1620,glow:0x00d0ff,baseGlow:.35,lineColor:0x1f5a6a,lineActive:0x00f0ff,pulseColor:0xffd23f});
+net.position.y=1.3;const msc=hang(net,12,5);
+const apple=W3D.makeSvgLogo(W3D.APPLE_SVG,{height:6,material:new THREE.MeshStandardMaterial({color:0x8e98a2,metalness:1,roughness:.2,envMap:ENV})});
+apple.position.set(REG.SWE.x,4.6,-66);scene.add(apple);
+const appleLight=new THREE.PointLight(0xffffff,1.2,14);appleLight.position.set(REG.SWE.x,6,-59);scene.add(appleLight);
+W3D.loadFont().then(font=>{
+  const wm=(t,c,w,parent,y=0)=>{const m=W3D.makeWordmark(font,t,{width:w,material:neon(c)});m.position.y=y;parent.add(m);return m};
+  hang(wm('UNAM',0xffc83d,3.6,new THREE.Group()),4);
+  hang(wm('MTEXPERTS',0x19ff9c,4.4,new THREE.Group()),8);
+  hang(wm('BBVA',0x1973f8,3.6,new THREE.Group()),9);
+  wm('SESOL',0xffd23f,2.8,sesol,-.4);
+  wm('JU',0x00d0ff,1.2,msc,-.9);
+  const via=wm('VIA AFRY',0xffffff,2.2,scene);via.position.set(REG.SWE.x,1,-66);via.material.emissiveIntensity=.35;
+}).catch(()=>{});
+
+// ---------- runner, plane, clouds, rain ----------
+function makeRunner(){
+  const g=new THREE.Group(),body=new THREE.Group();g.add(body);
+  const edgeMat=new THREE.LineBasicMaterial({color:0x19ff9c});
+  const box=(w,h,d,c,parent)=>{const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshStandardMaterial({color:c,roughness:.5,metalness:.3}));
+    m.add(new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry),edgeMat));parent.add(m);return m};
+  const torso=box(.55,.7,.32,0x26303a,body);torso.position.y=1.35;
+  box(.42,.42,.42,0xc68b59,body).position.y=1.95;box(.46,.14,.46,0x111111,body).position.y=2.17;
+  const visor=new THREE.Mesh(new THREE.BoxGeometry(.44,.08,.05),new THREE.MeshBasicMaterial({color:0x19ff9c}));visor.position.set(0,1.98,-.22);body.add(visor);
+  const limb=(w,h,c,x,y)=>{const p=new THREE.Group();p.position.set(x,y,0);box(w,h,w,c,p).position.y=-h/2;body.add(p);return p};
+  const aL=limb(.15,.62,0x26303a,-.36,1.65),aR=limb(.15,.62,0x26303a,.36,1.65),lL=limb(.2,.95,0x0a0d18,-.14,1),lR=limb(.2,.95,0x0a0d18,.14,1);
+  g.tick=(t,s,col)=>{const a=Math.sin(t*11);aL.rotation.x=a*1.1*s;aR.rotation.x=-a*1.1*s;lL.rotation.x=-a*.9*s;lR.rotation.x=a*.9*s;
+    body.position.y=Math.abs(Math.cos(t*11))*.12*s+Math.sin(t*2)*.02*(1-s);torso.rotation.x=-.15*s;edgeMat.color.copy(col);visor.material.color.copy(col)};
+  return g}
+const runner=makeRunner();scene.add(runner);
+const plane=W3D.makePlane({body:0x0a1a1a,accent:0xffd23f,glass:0x00f0ff,edge:0x19ff9c});scene.add(plane);
+const planeEdge=plane.inner.children[0].children[0].material;
+const clouds=W3D.makeCloudSea(90,{color:0x0a2228,edge:0x00d0ff});scene.add(clouds);
+const rainN=MOB?500:1500,rg=new THREE.BufferGeometry(),rp=new Float32Array(rainN*3);
+for(let i=0;i<rainN;i++){rp[i*3]=(Math.random()-.5)*40;rp[i*3+1]=Math.random()*20;rp[i*3+2]=-Math.random()*40+5}
+rg.setAttribute('position',new THREE.BufferAttribute(rp,3));
+const rain=new THREE.Points(rg,new THREE.PointsMaterial({color:0x9adfff,size:.05,transparent:true,opacity:.6}));scene.add(rain);
+
+// ---------- loop ----------
+let kT=0,k=0,speed=0,mx=0,my=0,t=0,last=performance.now();
+addEventListener('mousemove',e=>{mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5});
+function onScroll(){kT=W3D.scrollK(nodeEls);bar.style.width=(scrollY/(document.body.scrollHeight-innerHeight)*100)+'%'}
+addEventListener('scroll',onScroll,{passive:true});onScroll();
+W3D.mountSwitcher('neon',{bg:'rgba(3,7,10,.85)',fg:'#e6fff4',acc:'#19ff9c',accFg:'#03070a',border:'rgba(25,255,156,.5)',radius:'0',font:"12px 'Share Tech Mono', monospace"});
+let PORT=false;
+function resize(){R.setSize(innerWidth,innerHeight,false);composer.setSize(innerWidth,innerHeight);cam.aspect=innerWidth/innerHeight;PORT=cam.aspect<1;cam.fov=PORT?78:60;cam.updateProjectionMatrix();globe.resize(cam.aspect)}
+addEventListener('resize',resize);resize();
+const FORCE=/#k=([\d.]+)/.exec(location.hash); // preview hook: 1-cyberpunk.html#k=4.5 (node index)
+if(location.hash.includes('clean'))document.querySelector('main').style.visibility='hidden';
+const col=new THREE.Color(0x19ff9c),tgt=new THREE.Color(),sm=THREE.MathUtils.smoothstep,clamp=THREE.MathUtils.clamp;
+(function loop(now){const dt=Math.min(.05,(now-last)/1000);last=now;t+=dt;
+  if(FORCE)kT=k=+FORCE[1];
+  const prev=k;k+=(kT-k)*Math.min(1,dt*3);speed+=((Math.abs(k-prev)/dt>.03?1:0)-speed)*Math.min(1,dt*6);
+  const st=route(k),p=st.pos,n=ND[st.node];
+  // region colour + HUD
+  tgt.setHex(REG[n.g].main);col.lerp(tgt,Math.min(1,dt*3));
+  if(st.leg){loc.textContent=`IN FLIGHT · ${st.leg.from} → ${st.leg.to}`;yr.textContent=st.leg.y}
+  else{loc.textContent=n.m!=null?M[n.m].place:REG[n.g].name;yr.textContent=n.m!=null?M[n.m].y:'2011'}
+  hud.style.setProperty('--acc',hexCss(col.getHex()));
+  // runner / plane / clouds
+  runner.position.copy(p);runner.scale.setScalar(Math.max(.001,1-st.show*1.2));runner.tick(t,speed,col);
+  plane.position.set(p.x,.7+st.alt,p.z);plane.scale.setScalar(Math.max(.001,st.show));
+  plane.inner.rotation.x=st.pitch;plane.inner.rotation.z=Math.sin(t*1.3)*.1*st.alt/FLY_H;planeEdge.color.copy(col);
+  const cl=sm(st.alt,FLY_H*.3,FLY_H*.85);clouds.position.set(p.x,FLY_H-2.2,p.z);clouds.update(st.dist||0);clouds.setOpacity(cl);
+  scene.fog.density=.038+.05*cl;
+  // globe during cruise (covers the jump between regions)
+  const gf=st.leg?sm(st.u,.3,.4)*(1-sm(st.u,.6,.7)):0;globePass.enabled=gf>.001;
+  if(st.leg)globe.update(st.leg,clamp((st.u-.3)/.4,0,1),gf);
+  // lights, props
+  key.color.setRGB(1,1,1).lerp(col,.35);key.position.set(p.x-3,5,p.z+2);rim.position.set(p.x+3,4,p.z-3);
+  grid.position.set(Math.round(p.x/2)*2,0,Math.round(p.z/2)*2);rain.position.set(p.x,0,p.z);
+  logos.forEach(h=>{const d=p.z-h.position.z,same=Math.abs(h.position.x-p.x)<80;
+    h.scale.setScalar(same?sm(32-d,0,12)+.001:.001);h.rotation.y=Math.sin(t*.5+h.userData.i)*.5;h.position.y=h.userData.y+Math.sin(t*1.4+h.userData.i)*.15});
+  net.tick(t,dt,Math.abs(p.x-REG.SWE.x)<80?clamp(1.3-Math.abs(p.z+26)/10,0,1):0);
+  apple.rotation.y=t*.45;apple.position.y=4.6+Math.sin(t*1.1)*.2;
+  const a=rg.attributes.position.array;for(let i=1;i<a.length;i+=3){a[i]-=dt*14;if(a[i]<0)a[i]=20}rg.attributes.position.needsUpdate=true;
+  cam.position.set(p.x+mx*2.5+Math.sin(t*.3)*.3,2.6-my*1.2+st.alt*.85+(PORT?.6:0),p.z+4.6+st.alt*.3+(PORT?1.4:0));cam.lookAt(p.x,1.9+st.alt*.95,p.z-3);
+  composer.render();requestAnimationFrame(loop)})(last);
+</script>
+</body>
+</html>
