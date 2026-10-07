@@ -1,0 +1,10 @@
+# Only the files the live site needs are tracked; everything else stays local.
+*
+!/.gitignore
+!/README.md
+!/index.html
+!concepts/
+!concepts/1-cyberpunk.html
+!concepts/5-ai-robotics.html
+!concepts/shared/
+!concepts/shared/world3d.js
